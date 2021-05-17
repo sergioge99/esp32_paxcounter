@@ -121,9 +121,6 @@ void sendData() {
       if (cfg.countermode != 1) {
         reset_counters(); // clear macs container and reset all counters
         ESP_LOGI(TAG, "Counter cleared");
-        //char stats[128];
-        //vTaskGetRunTimeStats(stats);
-        //vTaskList(stats);
       }
 #ifdef HAS_DISPLAY
       else
