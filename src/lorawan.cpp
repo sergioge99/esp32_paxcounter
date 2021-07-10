@@ -184,9 +184,9 @@ void lora_send(void *pvParameters) {
   _ASSERT((uint32_t)pvParameters == 1); // FreeRTOS check
 
   MessageBuffer_t SendBuffer;
-
+  
   while (1) {
-
+    
     // postpone until we are joined if we are not
     while (!LMIC.devaddr) {
       vTaskDelay(pdMS_TO_TICKS(500));
@@ -198,7 +198,7 @@ void lora_send(void *pvParameters) {
       ESP_LOGE(TAG, "Premature return from xQueueReceive() with no data!");
       continue;
     }
-
+    ESP_LOGI(TAG, "Lora Queue Receive!!!!!!");
     // attempt to transmit payload
     switch (LMIC_setTxData2_strict(SendBuffer.MessagePort, SendBuffer.Message,
                                    SendBuffer.MessageSize,
@@ -217,6 +217,7 @@ void lora_send(void *pvParameters) {
       break;
     case LMIC_ERROR_TX_BUSY:   // LMIC already has a tx message pending
     case LMIC_ERROR_TX_FAILED: // message was not sent
+      ESP_LOGI(TAG, "Lora message was not sent");
       vTaskDelay(pdMS_TO_TICKS(500 + random(400))); // wait a while
       break;
     case LMIC_ERROR_TX_TOO_LARGE:    // message size exceeds LMIC buffer size
@@ -227,7 +228,6 @@ void lora_send(void *pvParameters) {
       break;
     default: // other LMIC return code
       ESP_LOGE(TAG, "LMIC error, message not sent and deleted");
-
     }         // switch
     delay(2); // yield to CPU
   }           // while(1)

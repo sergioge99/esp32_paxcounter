@@ -56,7 +56,7 @@ static void defaultConfig(configData_t *myconfig) {
   myconfig->monitormode = 0;        // 0=disabled, 1=enabled
   myconfig->payloadmask = PAYLOADMASK; // payloads as defined in default
   myconfig->enscount = COUNT_ENS;      // 0=disabled, 1=enabled
-
+ESP_LOGI(TAG, "CONFIGGGGGGGGGG");
 #ifdef HAS_BME680
   // initial BSEC state for BME680 sensor
   myconfig->bsecstate[BSEC_MAX_STATE_BLOB_SIZE] = {0};

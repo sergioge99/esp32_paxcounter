@@ -87,6 +87,8 @@ triggers pps 1 sec impulse
 // Basic Config
 #include "main.h"
 
+TaskHandle_t help_pin_handle = NULL;
+
 configData_t cfg; // struct holds current device configuration
 char lmic_event_msg[LMIC_EVENTMSG_LEN]; // display buffer for LMIC event message
 uint8_t batt_level = 0;                 // display value
@@ -115,6 +117,7 @@ Timezone myTZ(myDST, mySTD);
 
 // local Tag for logging
 static const char TAG[] = __FILE__;
+
 
 void setup() {
 
@@ -536,6 +539,29 @@ void setup() {
   // show compiled features
   ESP_LOGI(TAG, "Features:%s", features);
 
+  gpio_config_t gpioconf = {.pin_bit_mask = 1ull << 0,
+                            .mode = GPIO_MODE_OUTPUT,
+                            .pull_up_en = GPIO_PULLUP_DISABLE,
+                            .pull_down_en = GPIO_PULLDOWN_DISABLE,
+                            .intr_type = GPIO_INTR_DISABLE};
+  gpio_config(&gpioconf);
+    gpio_config_t gpioconf2 = {.pin_bit_mask = 1ull << 4,
+                            .mode = GPIO_MODE_OUTPUT,
+                            .pull_up_en = GPIO_PULLUP_DISABLE,
+                            .pull_down_en = GPIO_PULLDOWN_DISABLE,
+                            .intr_type = GPIO_INTR_DISABLE};
+  gpio_config(&gpioconf2);
+  /*
+    xTaskCreatePinnedToCore(help_pin,      // task function
+                          "help_pin",    // name of task
+                          4096,            // stack size of task
+                          (void *)1,       // parameter of the task
+                          2,               // priority of the task
+                          &help_pin_handle, // task handle
+                          1);              // CPU core
+
+  */
+
   // set runmode to normal
   RTC_runmode = RUNMODE_NORMAL;
 
@@ -544,3 +570,4 @@ void setup() {
 } // setup()
 
 void loop() { vTaskDelete(NULL); }
+

@@ -77,7 +77,7 @@ void mac_process(void *pvParameters) {
       ESP_LOGE(TAG, "Premature return from xQueueReceive() with no data!");
       continue;
     }
-
+    
     // update traffic indicator
     rf_load = uxQueueMessagesWaiting(MacQueue);
     // process fetched mac

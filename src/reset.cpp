@@ -44,7 +44,9 @@ void do_after_reset(void) {
   uint64_t sleep_time_ms;
 
   // read (and initialize on first run) runtime settings from NVRAM
-  loadConfig();
+  
+  //loadConfig();
+  eraseConfig();
 
   switch (rtc_get_reset_reason(0)) {
 
@@ -68,8 +70,7 @@ void do_after_reset(void) {
     ESP_LOGI(TAG, "Time spent in deep sleep: %d ms", sleep_time_ms);
     RTC_millis += sleep_time_ms; // increment system monotonic time
     // set wakeup state, not if we have pending OTA update
-    if (RTC_runmode == RUNMODE_SLEEP)
-      RTC_runmode = RUNMODE_WAKEUP;
+    //RTC_runmode = RUNMODE_WAKEUP;
     break;
 
   case SW_RESET:         // 0x03 Software reset digital core
@@ -127,7 +128,7 @@ void enter_deepsleep(const uint64_t wakeup_sec, gpio_num_t wakeup_gpio) {
 
   // wait a while (max 100 sec) to clear send queues
   ESP_LOGI(TAG, "Waiting until send queues are empty...");
-  for (i = 100; i > 0; i--) {
+  for (i = 2; i > 0; i--) {
     if (allQueuesEmtpy())
       break;
     vTaskDelay(pdMS_TO_TICKS(1000));
@@ -136,7 +137,7 @@ void enter_deepsleep(const uint64_t wakeup_sec, gpio_num_t wakeup_gpio) {
   // shutdown LMIC safely, waiting max 100 sec
 #if (HAS_LORA)
   ESP_LOGI(TAG, "Waiting until LMIC is idle...");
-  for (i = 100; i > 0; i--) {
+  for (i = 2; i > 0; i--) {
     if ((LMIC.opmode & OP_TXRXPEND) ||
         os_queryTimeCriticalJobs(sec2osticks(wakeup_sec)))
       vTaskDelay(pdMS_TO_TICKS(1000));

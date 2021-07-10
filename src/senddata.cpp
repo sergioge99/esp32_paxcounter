@@ -70,12 +70,6 @@ void SendPayload(uint8_t port) {
 
 // interrupt triggered function to prepare payload to send
 void sendData() {
-  //gpio_num_t GPIO_TIMER = 16;
-  //gpio_pad_select_gpio(GPIO_TIMER);
-	//gpio_set_direction(GPIO_TIMER,GPIO_MODE_OUTPUT);
-  pinMode(22, OUTPUT);
-  digitalWrite(22, HIGH);
-  digitalWrite(22, LOW); // Set GPIO22 active low
 
   uint8_t bitmask = cfg.payloadmask;
   uint8_t mask = 1;
@@ -192,6 +186,8 @@ void sendData() {
     bitmask &= ~mask;
     mask <<= 1;
   } // while (bitmask)
+
+  
 } // sendData()
 
 void flushQueues(void) {

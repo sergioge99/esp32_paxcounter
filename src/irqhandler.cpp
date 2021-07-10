@@ -71,7 +71,9 @@ void irqHandler(void *pvParameters) {
 
     // are cyclic tasks due?
     if (InterruptStatus & CYCLIC_IRQ) {
+      //gpio_set_level(GPIO_NUM_0,1);
       doHousekeeping();
+      //gpio_set_level(GPIO_NUM_0,0);
       InterruptStatus &= ~CYCLIC_IRQ;
     }
 
@@ -85,7 +87,9 @@ void irqHandler(void *pvParameters) {
 
     // is time to send the payload?
     if (InterruptStatus & SENDCYCLE_IRQ) {
+      gpio_set_level(GPIO_NUM_4,1);
       sendData();
+      gpio_set_level(GPIO_NUM_4,0);
       InterruptStatus &= ~SENDCYCLE_IRQ;
       // goto sleep if we have a sleep cycle
       if (cfg.sleepcycle)
